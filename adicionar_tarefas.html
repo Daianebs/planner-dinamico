@@ -99,6 +99,17 @@
     .acao:hover {
       background-color: #0056b3;
     }
+
+    .confirmacao {
+      color: #007bff; /* Cor azul */
+      margin-bottom: 10px;
+    }
+
+    /* Estilo para os botões de ação das tarefas */
+    .botoes-tarefa {
+      display: flex;
+      gap: 5px;
+    }
   </style>
 </head>
 <body>
@@ -106,54 +117,32 @@
     <button id="botao-adicionar" onclick="exibirOpcoes()">Adicionar Nova Tarefa</button>
     <div id="opcoes">
       <div class="opcoes-col">
-        <h3>Verbos</h3>
-        <ul id="lista-verbos"></ul>
+        <h3>Escolher Ação</h3>
+        <input type="text" id="input-acao" placeholder="Digite a ação">
+        <div id="opcoes-predicados" style="display: none;">
+          <h3>Escolher Predicado</h3>
+          <input type="text" id="input-predicado" placeholder="Digite o predicado">
+          <ul id="lista-predicados-sugeridos"></ul>
+        </div>
+        <ul id="lista-verbos-sugeridos"></ul>
       </div>
-      <div class="opcoes-col">
-        <h3>Possíveis Predicados</h3>
-        <ul id="lista-predicados"></ul>
-      </div>
-      <!-- Personalizar -->
-      <div class="opcoes-col" id="opcao-personalizar">
-        <h3>Personalizar</h3>
-        <form id="formulario-personalizar">
-          <input type="text" id="input-verbo" placeholder="Novo Verbo">
-          <input type="text" id="input-predicado" placeholder="Novo Predicado">
-          <button type="submit">Adicionar</button>
-        </form>
-      </div>
-      <!-- Adicione esta linha para exibir os verbos sugeridos -->
-      <ul id="lista-verbos-sugeridos"></ul>
     </div>
   </div>
 
   <div id="tarefas" class="container">
     <h2>Tarefas para o Dia</h2>
+    <p id="confirmacao" class="confirmacao" style="display: none;"></p>
     <ul id="lista-tarefas"></ul>
   </div>
 
   <script>
-    // Função para carregar os verbos e predicados do arquivo JSON
-    function carregarDados() {
-      fetch('tarefas-sugeridas.json')
-        .then(response => response.json())
-        .then(data => {
-          verbos = Object.keys(data.tarefas);
-          predicados = data.tarefas;
-          exibirTarefas();
-        })
-        .catch(error => console.error('Erro ao carregar dados:', error));
-    }
-
     // Verbos e predicados inicialmente vazios
     var verbos = [];
     var predicados = {};
+    var tarefasDia = [];
 
     // Carregar os dados ao iniciar a página
     carregarDados();
-
-    var verboSelecionado = null;
-    var tarefasDia = [];
 
     // Verifica se há tarefas armazenadas no localStorage e carrega
     if(localStorage.getItem('tarefas')) {
@@ -169,47 +158,8 @@
       predicados = JSON.parse(localStorage.getItem('predicados'));
     }
 
-    // Adicionando um evento de envio ao formulário de personalização
-    document.getElementById("formulario-personalizar").addEventListener("submit", function(event) {
-        event.preventDefault(); // Evita o recarregamento da página ao enviar o formulário
-
-        var novoVerbo = document.getElementById("input-verbo").value.trim();
-        var novoPredicado = document.getElementById("input-predicado").value.trim();
-
-        if (novoVerbo && novoPredicado) {
-            // Adicionar o novo verbo à lista de verbos, se não estiver presente
-            if (!verbos.includes(novoVerbo)) {
-                verbos.push(novoVerbo);
-                // Salvar a lista de verbos atualizada no armazenamento local
-                localStorage.setItem('verbos', JSON.stringify(verbos));
-                // Atualizar a exibição das opções de verbo e predicado
-                exibirTarefas();
-            }
-
-            // Adicionar o novo predicado à lista de predicados do novo verbo
-            if (!predicados[novoVerbo]) {
-                predicados[novoVerbo] = [];
-            }
-            if (!predicados[novoVerbo].includes(novoPredicado)) {
-                predicados[novoVerbo].push(novoPredicado);
-            }
-
-            // Salvar os predicados atualizados no armazenamento local
-            localStorage.setItem('predicados', JSON.stringify(predicados));
-
-            // Limpar os campos de entrada
-            document.getElementById("input-verbo").value = "";
-            document.getElementById("input-predicado").value = "";
-
-            // Atualizar a exibição das opções de verbo e predicado
-            exibirTarefas();
-        } else {
-            alert("Por favor, insira um novo verbo e um novo predicado.");
-        }
-    });
-
-    // Adicionar um evento de entrada ao campo de verbo para recomendar verbos
-    document.getElementById("input-verbo").addEventListener("input", function() {
+    // Adicionando um evento de entrada ao campo de ação para recomendar verbos
+    document.getElementById("input-acao").addEventListener("input", function() {
         var entradaUsuario = this.value.trim().toLowerCase();
         var verbosSugeridos = verbos.filter(function(verbo) {
             return verbo.toLowerCase().startsWith(entradaUsuario);
@@ -227,103 +177,65 @@
             var itemLista = document.createElement("li");
             itemLista.textContent = verbo;
             itemLista.addEventListener("click", function() {
-                adicionarNovoPredicado(verbo);
+                selecionarVerbo(verbo);
             });
             listaVerbosSugeridos.appendChild(itemLista);
         });
     }
 
-    // Função para adicionar um novo predicado para o verbo selecionado
-    function adicionarNovoPredicado(verbo) {
-        var novoPredicado = prompt("Novo Predicado para " + verbo);
-        if (novoPredicado !== null && novoPredicado.trim() !== "") {
-            // Adicionar o novo verbo à lista de verbos, se não estiver presente
-            if (!verbos.includes(verbo)) {
-                verbos.push(verbo);
-                // Salvar a lista de verbos atualizada no armazenamento local
-                localStorage.setItem('verbos', JSON.stringify(verbos));
-            }
-
-            // Adicionar o novo predicado à lista de predicados do verbo
-            if (!predicados[verbo]) {
-                predicados[verbo] = [];
-            }
-            if (!predicados[verbo].includes(novoPredicado)) {
-                predicados[verbo].push(novoPredicado);
-            }
-
-            // Salvar os predicados atualizados no armazenamento local
-            localStorage.setItem('predicados', JSON.stringify(predicados));
-
-            // Limpar os campos de entrada
-            document.getElementById("input-verbo").value = "";
-            document.getElementById("input-predicado").value = "";
-
-            // Atualizar a exibição das opções de verbo e predicado
-            exibirTarefas();
-        }
+    // Função para selecionar o verbo
+    function selecionarVerbo(verbo) {
+        // Esconder a lista de verbos sugeridos
+        document.getElementById("lista-verbos-sugeridos").style.display = "none";
+        // Exibir o campo de entrada de predicado
+        document.getElementById("opcoes-predicados").style.display = "block";
+        // Definir o valor do campo de ação como o verbo selecionado
+        document.getElementById("input-acao").value = verbo;
+        // Limpar o campo de predicado
+        document.getElementById("input-predicado").value = "";
+        // Exibir os predicados sugeridos para o verbo selecionado
+        exibirPredicadosSugeridos(verbo);
     }
 
-    // Função para exibir as opções de verbo e predicado
-    function exibirOpcoes() {
-        var botaoAdicionar = document.getElementById("botao-adicionar");
-        botaoAdicionar.style.display = "none";
-        document.getElementById("opcoes").style.display = "flex";
-        document.getElementById("opcao-personalizar").style.display = "block";
-        // Atualizar a exibição das opções de verbo e predicado
-        exibirTarefas();
-    }
-
-    // Função para exibir as tarefas com base nos verbos
-    function exibirTarefas() {
-        var listaVerbos = document.getElementById("lista-verbos");
-        listaVerbos.innerHTML = "";
-
-        verbos.forEach(function(verbo) {
-            var itemLista = document.createElement("li");
-            itemLista.textContent = verbo;
-            itemLista.addEventListener("click", function() {
-                selecionarVerbo(verbo);
-            });
-            listaVerbos.appendChild(itemLista);
-        });
-    }
-    
-    // Função para exibir os predicados quando um verbo é selecionado
-    function exibirPredicados(verbo) {
-        var listaPredicados = document.getElementById("lista-predicados");
-        listaPredicados.innerHTML = "";
+    // Função para exibir os predicados sugeridos para o verbo selecionado
+    function exibirPredicadosSugeridos(verbo) {
+        var listaPredicadosSugeridos = document.getElementById("lista-predicados-sugeridos");
+        listaPredicadosSugeridos.innerHTML = "";
 
         predicados[verbo].forEach(function(predicado) {
             var itemLista = document.createElement("li");
             itemLista.textContent = predicado;
             itemLista.addEventListener("click", function() {
-                adicionarTarefa(verbo, predicado);
+                adicionarNovaAcao(verbo, predicado);
             });
-            listaPredicados.appendChild(itemLista);
+            listaPredicadosSugeridos.appendChild(itemLista);
         });
     }
 
-    // Função para selecionar o verbo
-    function selecionarVerbo(verbo) {
-        if (verboSelecionado) {
-            verboSelecionado.classList.remove("highlight");
-        }
-        verboSelecionado = event.target;
-        verboSelecionado.classList.add("highlight");
-        exibirPredicados(verbo);
-    }
-    
-    // Função para adicionar a tarefa à agenda do usuário
-    function adicionarTarefa(verbo, predicado) {
-        var tarefa = verbo + " " + predicado;
-        tarefasDia.push(tarefa);
+    // Função para adicionar uma nova ação à lista de tarefas do dia
+    function adicionarNovaAcao(verbo, predicado) {
+        var acao = verbo + " " + predicado;
+        tarefasDia.push(acao);
         localStorage.setItem('tarefas', JSON.stringify(tarefasDia));
         exibirTarefasDia();
-        // Oculta as opções após adicionar a tarefa
-        document.getElementById("opcoes").style.display = "none";
-        // Exibe novamente o botão de adicionar
-        document.getElementById("botao-adicionar").style.display = "block";
+        // Limpar o campo de ação
+        document.getElementById("input-acao").value = "";
+        // Ocultar o campo de predicado
+        document.getElementById("opcoes-predicados").style.display = "none";
+        // Exibir novamente a lista de verbos sugeridos se houver texto no campo de ação
+        var textoAcao = document.getElementById("input-acao").value.trim();
+        if (textoAcao !== "") {
+            document.getElementById("lista-verbos-sugeridos").style.display = "block";
+        }
+        // Exibir mensagem de confirmação acima do título "Tarefas do Dia"
+        var confirmacao = document.getElementById("confirmacao");
+        confirmacao.textContent = "Tarefa adicionada! Agora não se esquecerá! :D";
+        confirmacao.style.display = "block";
+
+        // Remover a mensagem após alguns segundos
+        setTimeout(function() {
+            confirmacao.style.display = "none";
+        }, 3000); // Tempo em milissegundos (3 segundos)
     }
 
     // Função para exibir as tarefas para o dia na tela
@@ -335,37 +247,36 @@
             var itemLista = document.createElement("li");
             itemLista.textContent = tarefa;
 
-            // Criando uma div para conter os botões editar e excluir
-            var divBotoes = document.createElement("div");
-            divBotoes.className = "botoes-tarefa";
-
+            // Container para os botões de ação da tarefa
+            var botoesTarefa = document.createElement("span");
+            botoesTarefa.className = "botoes-tarefa";
+            itemLista.appendChild(botoesTarefa);
+            
             // Adiciona botão de editar
-            var botaoEditar = document.createElement("button");
+            var botaoEditar = document.createElement("span");
             botaoEditar.textContent = "Editar";
             botaoEditar.className = "acao";
             botaoEditar.addEventListener("click", function() {
                 editarTarefa(index);
             });
-            divBotoes.appendChild(botaoEditar);
+            botoesTarefa.appendChild(botaoEditar);
             
             // Adiciona botão de excluir
-            var botaoExcluir = document.createElement("button");
+            var botaoExcluir = document.createElement("span");
             botaoExcluir.textContent = "Excluir";
             botaoExcluir.className = "acao";
             botaoExcluir.addEventListener("click", function() {
                 excluirTarefa(index);
             });
-            divBotoes.appendChild(botaoExcluir);
+            botoesTarefa.appendChild(botaoExcluir);
 
-            itemLista.appendChild(divBotoes);
-            
             listaTarefas.appendChild(itemLista);
         });
     }
 
     // Função para editar uma tarefa
     function editarTarefa(index) {
-        var novaTarefa = prompt("Editar Tarefa", tarefasDia[index]);
+        var novaTarefa = prompt("Digite a nova descrição da tarefa:");
         if (novaTarefa !== null) {
             tarefasDia[index] = novaTarefa;
             localStorage.setItem('tarefas', JSON.stringify(tarefasDia));
@@ -375,11 +286,32 @@
 
     // Função para excluir uma tarefa
     function excluirTarefa(index) {
-        var confirmacao = confirm("Tem certeza que deseja excluir esta tarefa?");
-        if (confirmacao) {
+        if (confirm("Tem certeza de que deseja excluir esta tarefa?")) {
             tarefasDia.splice(index, 1);
             localStorage.setItem('tarefas', JSON.stringify(tarefasDia));
             exibirTarefasDia();
+        }
+    }
+
+    // Função para carregar os dados dos verbos e predicados do arquivo JSON
+    function carregarDados() {
+      fetch('tarefas-sugeridas.json')
+        .then(response => response.json())
+        .then(data => {
+          verbos = Object.keys(data.tarefas);
+          predicados = data.tarefas;
+        })
+        .catch(error => console.error('Erro ao carregar dados:', error));
+    }
+      
+    // Função para exibir as opções de verbo e predicado
+    function exibirOpcoes() {
+        // Exibir o campo de entrada de ação
+        document.getElementById("opcoes").style.display = "block";
+        // Exibir a lista de verbos sugeridos se houver texto no campo de ação
+        var textoAcao = document.getElementById("input-acao").value.trim();
+        if (textoAcao !== "") {
+            document.getElementById("lista-verbos-sugeridos").style.display = "block";
         }
     }
   </script>
