@@ -133,18 +133,25 @@
   </div>
 
   <script>
-    // Verbos
-    var verbos = ["Ligar para", "Comprar", "Estudar", "Fazer", "Ir"];
-    
-    // Possíveis Predicados
-    var predicados = {
-        "Ligar para": ["Amigo", "Família", "Trabalho"],
-        "Comprar": ["Mantimentos", "Roupas", "Eletrônicos"],
-        "Estudar": ["Matemática", "História", "Inglês"],
-        "Fazer": ["Cama", "Exercícios", "Jantar"],
-        "Ir": ["Trabalho", "Academia", "Médico"]
-    };
-    
+    // Função para carregar os verbos e predicados do arquivo JSON
+    function carregarDados() {
+      fetch('tarefas-sugeridas.json')
+        .then(response => response.json())
+        .then(data => {
+          verbos = Object.keys(data.tarefas);
+          predicados = data.tarefas;
+          exibirTarefas();
+        })
+        .catch(error => console.error('Erro ao carregar dados:', error));
+    }
+
+    // Verbos e predicados inicialmente vazios
+    var verbos = [];
+    var predicados = {};
+
+    // Carregar os dados ao iniciar a página
+    carregarDados();
+
     var verboSelecionado = null;
     var tarefasDia = [];
 
