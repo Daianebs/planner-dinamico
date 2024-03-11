@@ -85,17 +85,8 @@
 
     .acao {
       cursor: pointer;
-      margin-left: 10px;
       color: #007bff;
       transition: color 0.3s ease;
-    }
-
-    .acao:hover {
-      color: #0056b3;
-    }
-
-    /* Adicionando estilo aos botões editar e excluir */
-    .acao {
       padding: 5px 10px;
       border-radius: 3px;
       background-color: #007bff;
@@ -122,6 +113,17 @@
         <h3>Possíveis Predicados</h3>
         <ul id="lista-predicados"></ul>
       </div>
+      <!-- Personalizar -->
+      <div class="opcoes-col" id="opcao-personalizar">
+        <h3>Personalizar</h3>
+        <form id="formulario-personalizar">
+          <input type="text" id="input-verbo" placeholder="Novo Verbo">
+          <input type="text" id="input-predicado" placeholder="Novo Predicado">
+          <button type="submit">Adicionar</button>
+        </form>
+      </div>
+      <!-- Adicione esta linha para exibir os verbos sugeridos -->
+      <ul id="lista-verbos-sugeridos"></ul>
     </div>
   </div>
 
@@ -152,11 +154,116 @@
       exibirTarefasDia();
     }
 
+    // Verifica se há verbos e predicados armazenados no armazenamento local e carrega-os
+    if(localStorage.getItem('verbos')) {
+      verbos = JSON.parse(localStorage.getItem('verbos'));
+    }
+    if(localStorage.getItem('predicados')) {
+      predicados = JSON.parse(localStorage.getItem('predicados'));
+    }
+
+    // Adicionando um evento de envio ao formulário de personalização
+    document.getElementById("formulario-personalizar").addEventListener("submit", function(event) {
+        event.preventDefault(); // Evita o recarregamento da página ao enviar o formulário
+
+        var novoVerbo = document.getElementById("input-verbo").value.trim();
+        var novoPredicado = document.getElementById("input-predicado").value.trim();
+
+        if (novoVerbo && novoPredicado) {
+            // Adicionar o novo verbo à lista de verbos, se não estiver presente
+            if (!verbos.includes(novoVerbo)) {
+                verbos.push(novoVerbo);
+                // Salvar a lista de verbos atualizada no armazenamento local
+                localStorage.setItem('verbos', JSON.stringify(verbos));
+                // Atualizar a exibição das opções de verbo e predicado
+                exibirTarefas();
+            }
+
+            // Adicionar o novo predicado à lista de predicados do novo verbo
+            if (!predicados[novoVerbo]) {
+                predicados[novoVerbo] = [];
+            }
+            if (!predicados[novoVerbo].includes(novoPredicado)) {
+                predicados[novoVerbo].push(novoPredicado);
+            }
+
+            // Salvar os predicados atualizados no armazenamento local
+            localStorage.setItem('predicados', JSON.stringify(predicados));
+
+            // Limpar os campos de entrada
+            document.getElementById("input-verbo").value = "";
+            document.getElementById("input-predicado").value = "";
+
+            // Atualizar a exibição das opções de verbo e predicado
+            exibirTarefas();
+        } else {
+            alert("Por favor, insira um novo verbo e um novo predicado.");
+        }
+    });
+
+    // Adicionar um evento de entrada ao campo de verbo para recomendar verbos
+    document.getElementById("input-verbo").addEventListener("input", function() {
+        var entradaUsuario = this.value.trim().toLowerCase();
+        var verbosSugeridos = verbos.filter(function(verbo) {
+            return verbo.toLowerCase().startsWith(entradaUsuario);
+        });
+
+        exibirVerbosSugeridos(verbosSugeridos);
+    });
+
+    // Função para exibir os verbos sugeridos ao usuário
+    function exibirVerbosSugeridos(verbosSugeridos) {
+        var listaVerbosSugeridos = document.getElementById("lista-verbos-sugeridos");
+        listaVerbosSugeridos.innerHTML = "";
+
+        verbosSugeridos.forEach(function(verbo) {
+            var itemLista = document.createElement("li");
+            itemLista.textContent = verbo;
+            itemLista.addEventListener("click", function() {
+                adicionarNovoPredicado(verbo);
+            });
+            listaVerbosSugeridos.appendChild(itemLista);
+        });
+    }
+
+    // Função para adicionar um novo predicado para o verbo selecionado
+    function adicionarNovoPredicado(verbo) {
+        var novoPredicado = prompt("Novo Predicado para " + verbo);
+        if (novoPredicado !== null && novoPredicado.trim() !== "") {
+            // Adicionar o novo verbo à lista de verbos, se não estiver presente
+            if (!verbos.includes(verbo)) {
+                verbos.push(verbo);
+                // Salvar a lista de verbos atualizada no armazenamento local
+                localStorage.setItem('verbos', JSON.stringify(verbos));
+            }
+
+            // Adicionar o novo predicado à lista de predicados do verbo
+            if (!predicados[verbo]) {
+                predicados[verbo] = [];
+            }
+            if (!predicados[verbo].includes(novoPredicado)) {
+                predicados[verbo].push(novoPredicado);
+            }
+
+            // Salvar os predicados atualizados no armazenamento local
+            localStorage.setItem('predicados', JSON.stringify(predicados));
+
+            // Limpar os campos de entrada
+            document.getElementById("input-verbo").value = "";
+            document.getElementById("input-predicado").value = "";
+
+            // Atualizar a exibição das opções de verbo e predicado
+            exibirTarefas();
+        }
+    }
+
     // Função para exibir as opções de verbo e predicado
     function exibirOpcoes() {
         var botaoAdicionar = document.getElementById("botao-adicionar");
         botaoAdicionar.style.display = "none";
         document.getElementById("opcoes").style.display = "flex";
+        document.getElementById("opcao-personalizar").style.display = "block";
+        // Atualizar a exibição das opções de verbo e predicado
         exibirTarefas();
     }
 
@@ -164,7 +271,7 @@
     function exibirTarefas() {
         var listaVerbos = document.getElementById("lista-verbos");
         listaVerbos.innerHTML = "";
-    
+
         verbos.forEach(function(verbo) {
             var itemLista = document.createElement("li");
             itemLista.textContent = verbo;
@@ -179,7 +286,7 @@
     function exibirPredicados(verbo) {
         var listaPredicados = document.getElementById("lista-predicados");
         listaPredicados.innerHTML = "";
-    
+
         predicados[verbo].forEach(function(predicado) {
             var itemLista = document.createElement("li");
             itemLista.textContent = predicado;
@@ -216,28 +323,34 @@
     function exibirTarefasDia() {
         var listaTarefas = document.getElementById("lista-tarefas");
         listaTarefas.innerHTML = "";
-    
+
         tarefasDia.forEach(function(tarefa, index) {
             var itemLista = document.createElement("li");
             itemLista.textContent = tarefa;
-            
+
+            // Criando uma div para conter os botões editar e excluir
+            var divBotoes = document.createElement("div");
+            divBotoes.className = "botoes-tarefa";
+
             // Adiciona botão de editar
-            var botaoEditar = document.createElement("span");
+            var botaoEditar = document.createElement("button");
             botaoEditar.textContent = "Editar";
             botaoEditar.className = "acao";
             botaoEditar.addEventListener("click", function() {
                 editarTarefa(index);
             });
-            itemLista.appendChild(botaoEditar);
+            divBotoes.appendChild(botaoEditar);
             
             // Adiciona botão de excluir
-            var botaoExcluir = document.createElement("span");
+            var botaoExcluir = document.createElement("button");
             botaoExcluir.textContent = "Excluir";
             botaoExcluir.className = "acao";
             botaoExcluir.addEventListener("click", function() {
                 excluirTarefa(index);
             });
-            itemLista.appendChild(botaoExcluir);
+            divBotoes.appendChild(botaoExcluir);
+
+            itemLista.appendChild(divBotoes);
             
             listaTarefas.appendChild(itemLista);
         });

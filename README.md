@@ -1,26 +1,43 @@
 # Aplicação de Planejamento de Tarefas
 
-Esta é uma aplicação simples de planejamento de tarefas que permite aos usuários adicionar tarefas para o dia, editar e excluir tarefas, tudo isso de forma interativa e dinâmica.
+Esta é uma aplicação simples de planejamento de tarefas que permite aos usuários adicionar tarefas para o dia predefinidas e personalizadas para evitar ficar sempre reescrevendo sua rotina; E editar e excluir tarefas, tudo isso de forma interativa e dinâmica.
 
 ## Conteúdo
 
 - [Funcionalidades](#funcionalidades)
-- [Como utilizar](#como-utilizar)
+- [Como utilizar](#como-usar)
+- [Contribuição](#Contribuição)
+
 
 ## Funcionalidades
 
-- Adicionar novas tarefas selecionando verbos e predicados pré-definidos.
-- Editar tarefas existentes.
-- Excluir tarefas existentes.
-- Armazenar tarefas localmente no navegador usando o Local Storage.
+- Adicionar novas tarefas selecionando um verbo e um predicado predefinidos ou personalizados.
+- Editar e excluir tarefas existentes.
+- Personalizar lista de verbos e predicados para se adequar às suas necessidades.
 
+## Como usar
 
-## Como utilizar
+1. **Adicionar Nova Tarefa:**
+   - Clique no botão "Adicionar Nova Tarefa" para exibir as opções de verbos e predicados.
+   - Selecione um verbo e um predicado da lista ou insira novos verbos e predicados na seção "Personalizar".
+   - Clique no botão "Adicionar" para adicionar a tarefa à lista.
 
-1. Clone este repositório ou baixe os arquivos diretamente para o seu computador.
-2. Abra o arquivo `index.html` no seu navegador da web. Isso abrirá a página inicial da aplicação.
-3. Na página inicial, clique no botão "Adicionar Tarefas" para ser redirecionado para a tela de adicionar tarefas.
-4. Na tela de adicionar tarefas, selecione um verbo e um predicado para criar uma nova tarefa para o dia.
-5. As tarefas adicionadas serão exibidas na parte inferior da página. Você pode clicar em "Editar" para editar uma tarefa existente ou "Excluir" para removê-la.
+2. **Editar Tarefa:**
+   - Clique no botão "Editar" ao lado da tarefa que deseja editar.
+   - Insira a nova descrição da tarefa na caixa de diálogo e clique em "OK".
 
-Agora você está pronto para começar a planejar suas tarefas diárias de forma fácil e eficiente!
+3. **Excluir Tarefa:**
+   - Clique no botão "Excluir" ao lado da tarefa que deseja excluir.
+   - Confirme a exclusão na caixa de diálogo.
+
+4. **Personalizar Verbos e Predicados:**
+   - Na seção "Personalizar", insira um novo verbo e um novo predicado nos campos de entrada.
+   - Clique no botão "Adicionar" para salvar a personalização.
+
+## Contribuição
+
+Contribuições são bem-vindas! Sinta-se à vontade para abrir uma issue para relatar problemas ou sugerir melhorias. Se desejar contribuir diretamente, faça um fork do repositório, faça as alterações e envie uma solicitação de pull.
+
+## Licença
+
+Este projeto está licenciado sob a [Licença MIT](https://opensource.org/licenses/MIT).
