@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Home</title>
+  <style>
+    /* CSS */
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+      margin: 0;
+      padding: 0;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 20px auto;
+      padding: 20px;
+      background-color: #fff;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      text-align: center;
+    }
+
+    h1 {
+      margin-top: 0;
+    }
+
+    #botao-adicionar {
+      padding: 10px 20px;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    #botao-adicionar:hover {
+      background-color: #0056b3;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Bem-vindo à Aplicação de Planejamento de Tarefas</h1>
+    <button id="botao-adicionar" onclick="redirecionarParaTarefas()">Adicionar Tarefas</button>
+  </div>
+
+  <script>
+    // Função para redirecionar para a tela de adicionar tarefas
+    function redirecionarParaTarefas() {
+      window.location.href = "adicionar_tarefas.html";
+    }
+  </script>
+</body>
+</html>

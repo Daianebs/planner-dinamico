@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Planejamento de Tarefas Diárias</title>
+  <style>
+    /* CSS */
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+      margin: 0;
+      padding: 0;
+    }
+    
+    .container {
+      max-width: 800px;
+      margin: 20px auto;
+      padding: 20px;
+      background-color: #fff;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+    
+    ul {
+      list-style-type: none;
+      padding: 0;
+      margin: 0;
+    }
+    
+    li {
+      margin-bottom: 10px;
+      padding: 10px;
+      background-color: #e0e0e0;
+      border-radius: 5px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    li:hover {
+      background-color: #ddd;
+    }
+
+    .highlight {
+      background-color: #ffa;
+    }
+
+    #opcoes {
+      display: none;
+      flex-wrap: wrap;
+      margin-top: 10px;
+    }
+
+    .opcoes-col {
+      flex: 1;
+      margin: 0 5px;
+    }
+
+    .opcoes-col ul {
+      padding: 0 10px;
+    }
+
+    .opcoes-col h3 {
+      margin-top: 0;
+    }
+
+    #botao-adicionar {
+      padding: 10px 20px;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    #botao-adicionar:hover {
+      background-color: #0056b3;
+    }
+
+    #tarefas {
+      margin-top: 20px;
+    }
+
+    .acao {
+      cursor: pointer;
+      margin-left: 10px;
+      color: #007bff;
+      transition: color 0.3s ease;
+    }
+
+    .acao:hover {
+      color: #0056b3;
+    }
+
+    /* Adicionando estilo aos botões editar e excluir */
+    .acao {
+      padding: 5px 10px;
+      border-radius: 3px;
+      background-color: #007bff;
+      color: #fff;
+      border: none;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    .acao:hover {
+      background-color: #0056b3;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <button id="botao-adicionar" onclick="exibirOpcoes()">Adicionar Nova Tarefa</button>
+    <div id="opcoes">
+      <div class="opcoes-col">
+        <h3>Verbos</h3>
+        <ul id="lista-verbos"></ul>
+      </div>
+      <div class="opcoes-col">
+        <h3>Possíveis Predicados</h3>
+        <ul id="lista-predicados"></ul>
+      </div>
+    </div>
+  </div>
+
+  <div id="tarefas" class="container">
+    <h2>Tarefas para o Dia</h2>
+    <ul id="lista-tarefas"></ul>
+  </div>
+
+  <script>
+    // Verbos
+    var verbos = ["Ligar para", "Comprar", "Estudar", "Fazer", "Ir"];
+    
+    // Possíveis Predicados
+    var predicados = {
+        "Ligar para": ["Amigo", "Família", "Trabalho"],
+        "Comprar": ["Mantimentos", "Roupas", "Eletrônicos"],
+        "Estudar": ["Matemática", "História", "Inglês"],
+        "Fazer": ["Cama", "Exercícios", "Jantar"],
+        "Ir": ["Trabalho", "Academia", "Médico"]
+    };
+    
+    var verboSelecionado = null;
+    var tarefasDia = [];
+
+    // Verifica se há tarefas armazenadas no localStorage e carrega
+    if(localStorage.getItem('tarefas')) {
+      tarefasDia = JSON.parse(localStorage.getItem('tarefas'));
+      exibirTarefasDia();
+    }
+
+    // Função para exibir as opções de verbo e predicado
+    function exibirOpcoes() {
+        var botaoAdicionar = document.getElementById("botao-adicionar");
+        botaoAdicionar.style.display = "none";
+        document.getElementById("opcoes").style.display = "flex";
+        exibirTarefas();
+    }
+
+    // Função para exibir as tarefas com base nos verbos
+    function exibirTarefas() {
+        var listaVerbos = document.getElementById("lista-verbos");
+        listaVerbos.innerHTML = "";
+    
+        verbos.forEach(function(verbo) {
+            var itemLista = document.createElement("li");
+            itemLista.textContent = verbo;
+            itemLista.addEventListener("click", function() {
+                selecionarVerbo(verbo);
+            });
+            listaVerbos.appendChild(itemLista);
+        });
+    }
+    
+    // Função para exibir os predicados quando um verbo é selecionado
+    function exibirPredicados(verbo) {
+        var listaPredicados = document.getElementById("lista-predicados");
+        listaPredicados.innerHTML = "";
+    
+        predicados[verbo].forEach(function(predicado) {
+            var itemLista = document.createElement("li");
+            itemLista.textContent = predicado;
+            itemLista.addEventListener("click", function() {
+                adicionarTarefa(verbo, predicado);
+            });
+            listaPredicados.appendChild(itemLista);
+        });
+    }
+
+    // Função para selecionar o verbo
+    function selecionarVerbo(verbo) {
+        if (verboSelecionado) {
+            verboSelecionado.classList.remove("highlight");
+        }
+        verboSelecionado = event.target;
+        verboSelecionado.classList.add("highlight");
+        exibirPredicados(verbo);
+    }
+    
+    // Função para adicionar a tarefa à agenda do usuário
+    function adicionarTarefa(verbo, predicado) {
+        var tarefa = verbo + " " + predicado;
+        tarefasDia.push(tarefa);
+        localStorage.setItem('tarefas', JSON.stringify(tarefasDia));
+        exibirTarefasDia();
+        // Oculta as opções após adicionar a tarefa
+        document.getElementById("opcoes").style.display = "none";
+        // Exibe novamente o botão de adicionar
+        document.getElementById("botao-adicionar").style.display = "block";
+    }
+
+    // Função para exibir as tarefas para o dia na tela
+    function exibirTarefasDia() {
+        var listaTarefas = document.getElementById("lista-tarefas");
+        listaTarefas.innerHTML = "";
+    
+        tarefasDia.forEach(function(tarefa, index) {
+            var itemLista = document.createElement("li");
+            itemLista.textContent = tarefa;
+            
+            // Adiciona botão de editar
+            var botaoEditar = document.createElement("span");
+            botaoEditar.textContent = "Editar";
+            botaoEditar.className = "acao";
+            botaoEditar.addEventListener("click", function() {
+                editarTarefa(index);
+            });
+            itemLista.appendChild(botaoEditar);
+            
+            // Adiciona botão de excluir
+            var botaoExcluir = document.createElement("span");
+            botaoExcluir.textContent = "Excluir";
+            botaoExcluir.className = "acao";
+            botaoExcluir.addEventListener("click", function() {
+                excluirTarefa(index);
+            });
+            itemLista.appendChild(botaoExcluir);
+            
+            listaTarefas.appendChild(itemLista);
+        });
+    }
+
+    // Função para editar uma tarefa
+    function editarTarefa(index) {
+        var novaTarefa = prompt("Editar Tarefa", tarefasDia[index]);
+        if (novaTarefa !== null) {
+            tarefasDia[index] = novaTarefa;
+            localStorage.setItem('tarefas', JSON.stringify(tarefasDia));
+            exibirTarefasDia();
+        }
+    }
+
+    // Função para excluir uma tarefa
+    function excluirTarefa(index) {
+        var confirmacao = confirm("Tem certeza que deseja excluir esta tarefa?");
+        if (confirmacao) {
+            tarefasDia.splice(index, 1);
+            localStorage.setItem('tarefas', JSON.stringify(tarefasDia));
+            exibirTarefasDia();
+        }
+    }
+  </script>
+</body>
+</html>
