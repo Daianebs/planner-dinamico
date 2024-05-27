@@ -1,3 +1,5 @@
+// TarefasModule.js
+
 export let verbos = [];
 export let predicados = {};
 export let tarefasDia = [];
@@ -13,8 +15,7 @@ export function carregarDados() {
     .then(data => {
       verbos = Object.keys(data.tarefas);
       predicados = data.tarefas;
-      //console.log("Dados carregados com sucesso:", verbos, predicados);
-
+      
       // Carregar tarefas do localStorage, se existirem
       const storedTarefas = localStorage.getItem('tarefas');
       if (storedTarefas) {
@@ -31,12 +32,12 @@ export function adicionarNovaAcao(verbo, predicado) {
   localStorage.setItem('tarefas', JSON.stringify(tarefasDia));
   exibirTarefasDia();
 
-  limparCamposeOcultar();
+  limparCamposEOcultar();
 
   exibirMensagemConfirmacao();
 }
 
-function limparCamposeOcultar() {
+function limparCamposEOcultar() {
   document.getElementById("input-acao").value = "";
   document.getElementById("input-predicado").value = "";
   document.getElementById("lista-predicados-sugeridos").innerHTML = "";
@@ -60,19 +61,23 @@ export function exibirTarefasDia() {
   tarefasDia.forEach((tarefa, index) => {
     const itemLista = document.createElement("li");
     itemLista.textContent = tarefa;
+    itemLista.draggable = true;
+    itemLista.setAttribute("data-index", index); // Adiciona um atributo para identificar o índice
+
+    // Evento para iniciar o drag
+    itemLista.addEventListener("dragstart", (event) => {
+      event.dataTransfer.setData("text/plain", index);
+    });
+
+    // Adicionar evento de duplo clique para editar a tarefa
+    itemLista.addEventListener("dblclick", () => editarTarefa(index));
 
     const botoesTarefa = document.createElement("span");
     botoesTarefa.className = "botoes-tarefa";
     itemLista.appendChild(botoesTarefa);
 
-    const botaoEditar = document.createElement("span");
-    botaoEditar.textContent = "Editar";
-    botaoEditar.className = "acao botao-editar";
-    botaoEditar.addEventListener("click", () => editarTarefa(index));
-    botoesTarefa.appendChild(botaoEditar);
-
     const botaoExcluir = document.createElement("span");
-    botaoExcluir.textContent = "Excluir";
+    botaoExcluir.textContent = "X";
     botaoExcluir.className = "acao botao-excluir";
     botaoExcluir.addEventListener("click", () => excluirTarefa(index));
     botoesTarefa.appendChild(botaoExcluir);
@@ -81,13 +86,60 @@ export function exibirTarefasDia() {
   });
 }
 
-function editarTarefa(index) {
-  const novaTarefa = prompt("Digite o nome da tarefa:");
-  if (novaTarefa !== null) {
-    tarefasDia[index] = novaTarefa;
-    localStorage.setItem('tarefas', JSON.stringify(tarefasDia));
+// Função para permitir o drop
+window.allowDrop = function (event) {
+  event.preventDefault();
+};
+
+// Função para realizar o drop e reordenar as tarefas
+window.drop = function (event) {
+  event.preventDefault();
+  const data = event.dataTransfer.getData("text/plain");
+  const fromIndex = parseInt(data, 10); // Índice original da tarefa arrastada
+  const toIndex = event.target.dataset.index; // Índice do alvo onde a tarefa será solta
+
+  if (fromIndex !== toIndex) {
+    // Reordena o array de tarefas
+    const movedTarefa = tarefasDia.splice(fromIndex, 1)[0];
+    tarefasDia.splice(toIndex, 0, movedTarefa);
+
+    // Atualiza o localStorage com o novo array ordenado
+    localStorage.setItem("tarefas", JSON.stringify(tarefasDia));
+
+    // Atualiza a exibição das tarefas na interface
     exibirTarefasDia();
   }
+};
+
+function editarTarefa(index) {
+  const itemLista = document.querySelectorAll("#lista-tarefas li")[index];
+  const tarefaAtual = tarefasDia[index];
+
+  const inputEdicao = document.createElement("input");
+  inputEdicao.type = "text";
+  inputEdicao.value = tarefaAtual;
+  inputEdicao.className = "input-edicao";
+
+  inputEdicao.addEventListener("blur", () => {
+    const novaTarefa = inputEdicao.value.trim();
+    if (novaTarefa !== "") {
+      tarefasDia[index] = novaTarefa;
+      localStorage.setItem('tarefas', JSON.stringify(tarefasDia));
+      exibirTarefasDia();
+    } else {
+      exibirTarefasDia();
+    }
+  });
+
+  inputEdicao.addEventListener("keyup", (event) => {
+    if (event.key === "Enter") {
+      inputEdicao.blur();
+    }
+  });
+
+  itemLista.textContent = "";
+  itemLista.appendChild(inputEdicao);
+  inputEdicao.focus();
 }
 
 function excluirTarefa(index) {

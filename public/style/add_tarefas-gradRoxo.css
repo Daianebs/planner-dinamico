@@ -104,6 +104,16 @@ li:hover {
   text-decoration: solid;
 }
 
+.input-edicao {
+  width: calc(100% - 20px);
+  padding: 5px;
+  margin: 0;
+  border: 1px solid #b24eff;
+  border-radius: 5px;
+  font-family: 'Poppins', sans-serif;
+  font-size: 15px;
+  color: #b24eff;
+}
 #botao-adicionar {
   padding: 10px 20px;
   background-color: #ae00ff71;
@@ -125,22 +135,6 @@ li:hover {
   gap: 5px;
 }
 
-.botao-editar {
-  cursor: pointer;
-  transition: color 0.3s ease;
-  padding: 5px 10px;
-  border-radius: 3px;
-  background-color: #3492cd;
-  color: #fff;
-  border: none;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-}
-
-.botao-editar:hover {
-  background-color: #0056b3;
-}
-
 .botao-excluir {
   color: white;
   background-color: rgba(240, 0, 0, 0.848);
@@ -152,3 +146,4 @@ li:hover {
 .botao-excluir:hover {
   background-color: darkred;
 }
+
