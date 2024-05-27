@@ -2,35 +2,45 @@ class InterfaceUsuarioModule {
   constructor(sugestoesModule, tarefasModule) {
     this.sugestoesModule = sugestoesModule;
     this.tarefasModule = tarefasModule;
+    this.iniciar();
   }
 
+  iniciar() {
+    const botaoAdicionar = document.getElementById("botao-adicionar");
+    botaoAdicionar.addEventListener("click", () => {
+      console.log("Botão 'Adicionar Nova Tarefa' clicado");
+      document.getElementById("opcoes").style.display = "block";
+    });
 
-  exibirOpcoes(textoAcao) {
+    const inputAcao = document.getElementById("input-acao");
+    inputAcao.addEventListener("input", () => {
+      const textoDigitado = inputAcao.value.trim();
+      console.log("Texto digitado em tempo real:", textoDigitado);
+
+      this.exibirOpcoes(textoDigitado);
+    });
+  }
+
+  exibirOpcoes(textoAcao = "") {
     if (textoAcao !== "") {
       const verbosSugeridos = this.sugestoesModule.buscarVerbos(textoAcao);
-      console.log("Verbos sugeridos: ", verbosSugeridos); // Log para verificar os verbos sugeridos
       this.sugestoesModule.exibirVerbosSugeridos(verbosSugeridos, this.selecionarVerbo.bind(this));
     } else {
-      console.log("Texto de ação está vazio"); // Log para verificar se a condição não é atendida
+      console.log("Texto de ação está vazio");
     }
   }
 
   selecionarVerbo(verbo) {
     document.getElementById("input-acao").value = verbo;
-  
-    // Verifica se tarefasModule está definido e adicionarNovaAcao é uma função
+
     if (this.tarefasModule && typeof this.tarefasModule.adicionarNovaAcao === 'function') {
-      // Chama exibirPredicadosSugeridos com verbo e adicionarNovaAcao vinculado ao contexto de tarefasModule
       this.sugestoesModule.exibirPredicadosSugeridos(verbo, this.tarefasModule.adicionarNovaAcao.bind(this.tarefasModule));
     } else {
       console.error('Função adicionarNovaAcao não está disponível em tarefasModule');
     }
+
     document.getElementById("lista-verbos-sugeridos").style.display = "none";
-    
   }
-  
 }
-
-
 
 export default InterfaceUsuarioModule;

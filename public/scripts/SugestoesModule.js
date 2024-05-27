@@ -5,18 +5,13 @@ class SugestoesModule {
   }
 
   buscarVerbos(entradaUsuario) {
-    console.log("(buscarverbos) Recebi a entrada: " + entradaUsuario);
-    console.log("verbos que tenho: " + this.verbos)
-    const verbosSugeridos = this.verbos.filter(verbo => verbo.toLowerCase().startsWith(entradaUsuario.toLowerCase()));
-    console.log("(buscarverbos)Verbos sugeridos: ", verbosSugeridos);
-    return verbosSugeridos;
+    return this.verbos.filter(verbo => verbo.toLowerCase().startsWith(entradaUsuario.toLowerCase()));
   }
 
   exibirVerbosSugeridos(verbosSugeridos, callback) {
     const listaVerbosSugeridos = document.getElementById("lista-verbos-sugeridos");
     listaVerbosSugeridos.innerHTML = "";
-    console.log("(exibirVerbosSugeridos)Exibindo verbos sugeridos: ", verbosSugeridos);
-    
+
     verbosSugeridos.forEach(verbo => {
       const itemLista = document.createElement("li");
       itemLista.textContent = verbo;
@@ -26,10 +21,10 @@ class SugestoesModule {
 
     listaVerbosSugeridos.style.display = verbosSugeridos.length > 0 ? "block" : "none";
   }
+
   exibirPredicadosSugeridos(verbo, callback) {
     const listaPredicadosSugeridos = document.getElementById("lista-predicados-sugeridos");
     listaPredicadosSugeridos.innerHTML = "";
-    console.log("(exibirPredicadosSugeridos) Exibindo predicados do verbo: ", verbo);
 
     if (this.predicados[verbo]) {
       this.predicados[verbo].forEach(predicado => {
