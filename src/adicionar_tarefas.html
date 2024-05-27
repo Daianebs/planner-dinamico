@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Planejamento de Tarefas Diárias</title>
+  <link rel="stylesheet" href="style/add_tarefas.css">
+  <script type="module" src="./scripts/main.js"></script>
+</head>
+<body>
+  <div class="container">
+    <button id="botao-adicionar">Adicionar Nova Tarefa</button>
+    <div id="opcoes" style="display: none;">
+      <div class="opcoes-col">
+        <h3>Escolher Ação</h3>
+        <input type="text" id="input-acao" placeholder="O que fará hoje?">
+        <div id="opcoes-predicados" style="display: none;">
+          <input type="text" id="input-predicado" placeholder="o que? Como? onde?...">
+          <ul id="lista-predicados-sugeridos"></ul>
+        </div>
+        <ul id="lista-verbos-sugeridos"></ul>
+      </div>
+    </div>
+  </div>
+
+  <div id="tarefas" class="container">
+    <h2>Tarefas para o Dia</h2>
+    <p id="confirmacao" class="confirmacao" style="display: none;"></p>
+    <ul id="lista-tarefas"></ul>
+  </div>
+</body>
+</html>
