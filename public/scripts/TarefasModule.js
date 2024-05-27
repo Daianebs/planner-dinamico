@@ -3,7 +3,7 @@ export let predicados = {};
 export let tarefasDia = [];
 
 export function carregarDados() {
-  fetch('../data/tarefas-sugeridas.json')
+  fetch('./data/tarefas-sugeridas.json')  
     .then(response => {
       if (!response.ok) {
         throw new Error(`Network response was not ok: ${response.statusText}`);
@@ -13,6 +13,7 @@ export function carregarDados() {
     .then(data => {
       verbos = Object.keys(data.tarefas);
       predicados = data.tarefas;
+      console.log("Dados carregados com sucesso:", verbos, predicados);
     })
     .catch(error => console.error('Erro ao carregar dados:', error));
 }
@@ -22,16 +23,21 @@ export function adicionarNovaAcao(verbo, predicado) {
   tarefasDia.push(acao);
   localStorage.setItem('tarefas', JSON.stringify(tarefasDia));
   exibirTarefasDia();
+  
+  // Limpar campos e ocultar lista de predicados
   document.getElementById("input-acao").value = "";
+  document.getElementById("input-predicado").value = "";
+  document.getElementById("lista-predicados-sugeridos").innerHTML = "";
   document.getElementById("opcoes-predicados").style.display = "none";
-
+  document.getElementById("opcoes").style.display = "none";
+  // Exibir mensagem de confirmação
   const confirmacao = document.getElementById("confirmacao");
   confirmacao.textContent = "Tarefa adicionada! Agora não se esquecerá! :D";
   confirmacao.style.display = "block";
   setTimeout(() => {
     confirmacao.style.display = "none";
   }, 3000);
-  document.getElementById("opcoes").style.display = "none";
+
 }
 
 export function exibirTarefasDia() {
