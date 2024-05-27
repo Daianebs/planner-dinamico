@@ -41,7 +41,7 @@ function limparCamposeOcultar() {
   document.getElementById("input-predicado").value = "";
   document.getElementById("lista-predicados-sugeridos").innerHTML = "";
   document.getElementById("opcoes-predicados").style.display = "none";
-  document.getElementById("opcoes").style.display = "none";
+  document.getElementById("form-modal").style.display = "none";
 }
 
 function exibirMensagemConfirmacao() {
@@ -67,7 +67,7 @@ export function exibirTarefasDia() {
 
     const botaoEditar = document.createElement("span");
     botaoEditar.textContent = "Editar";
-    botaoEditar.className = "acao";
+    botaoEditar.className = "acao botao-editar";
     botaoEditar.addEventListener("click", () => editarTarefa(index));
     botoesTarefa.appendChild(botaoEditar);
 

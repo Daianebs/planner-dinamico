@@ -7,16 +7,17 @@ class InterfaceUsuarioModule {
 
   iniciar() {
     const botaoAdicionar = document.getElementById("botao-adicionar");
+    const formModal = document.getElementById("form-modal");
+
     botaoAdicionar.addEventListener("click", () => {
       console.log("Botão 'Adicionar Nova Tarefa' clicado");
-      document.getElementById("opcoes").style.display = "block";
+      formModal.style.display = "flex";
     });
 
     const inputAcao = document.getElementById("input-acao");
     inputAcao.addEventListener("input", () => {
       const textoDigitado = inputAcao.value.trim();
       console.log("Texto digitado em tempo real:", textoDigitado);
-
       this.exibirOpcoes(textoDigitado);
     });
   }

@@ -1,0 +1,154 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  height: 100%;
+}
+
+body {
+  font-family: 'Poppins', sans-serif;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  background: linear-gradient(120deg, white, rgb(212, 179, 255));
+  margin: 0;
+  margin-top: 10px;
+}
+
+.container {
+  max-width: 400px;
+  margin: 20px 15px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  background-color: rgba(251, 251, 251, 0.84);
+  border-radius: 8px;
+}
+
+.containerBotao {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  box-sizing: border-box;
+}
+
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.modal-content {
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  max-width: 400px;
+  width: 100%;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+h2 {
+  background-color: #d298ff;
+  color: #fff;
+  margin: 0;
+  padding: 10px;
+  border-radius: 8px 8px 0 0;
+}
+
+ul {
+  list-style-type: none;
+  max-height: 400px;
+  overflow-y: auto;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+li {
+  color: #b24eff;
+  font-size: 15px;
+  font-family: 'Poppins', sans-serif;
+  margin-bottom: 20px;
+  padding: 10px;
+  background-color: rgba(142, 29, 248, 0.093);
+  border-radius: 5px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+li:hover {
+  background-color: #dddddd4a;
+}
+
+.highlight {
+  background-color: #ffa;
+}
+
+#tarefas {
+  margin-top: 20px;
+}
+
+.confirmacao {
+  color: #ff519f;
+  margin-bottom: 10px;
+  text-decoration: solid;
+}
+
+#botao-adicionar {
+  padding: 10px 20px;
+  background-color: #ae00ff71;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+#botao-adicionar:hover {
+  background-color: rgba(51, 0, 99, 0.575);
+}
+
+
+/* Estilo para os botões de ação das tarefas */
+.botoes-tarefa {
+  display: flex;
+  gap: 5px;
+}
+
+.botao-editar {
+  cursor: pointer;
+  transition: color 0.3s ease;
+  padding: 5px 10px;
+  border-radius: 3px;
+  background-color: #3492cd;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.botao-editar:hover {
+  background-color: #0056b3;
+}
+
+.botao-excluir {
+  color: white;
+  background-color: rgba(240, 0, 0, 0.848);
+  padding: 5px 10px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.botao-excluir:hover {
+  background-color: darkred;
+}

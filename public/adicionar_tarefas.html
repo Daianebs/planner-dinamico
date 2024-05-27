@@ -4,24 +4,24 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Planejamento de Tarefas Diárias</title>
-  <link rel="stylesheet" href="style/add_tarefas.css">
+  <link rel="stylesheet" href="style/add_tarefas-gradRoxo.css">
   <script type="module" src="./scripts/main.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-
 </head>
 <body>
-  <div class="container">
+  <div class="containerBotao">
     <button id="botao-adicionar">Adicionar Nova Tarefa</button>
-    <div id="opcoes" style="display: none;">
-      <div class="opcoes-col">
-        <h3>Escolher Ação</h3>
-        <input type="text" id="input-acao" placeholder="O que fará hoje?">
-        <div id="opcoes-predicados" style="display: none;">
-          <input type="text" id="input-predicado" placeholder="o que? Como? onde?...">
-          <ul id="lista-predicados-sugeridos"></ul>
-        </div>
-        <ul id="lista-verbos-sugeridos"></ul>
+  </div>
+  
+  <div class="modal" id="form-modal" style="display: none;">
+    <div class="modal-content">
+      <h3>Escolher Ação</h3>
+      <input type="text" id="input-acao" placeholder="O que fará hoje?">
+      <div id="opcoes-predicados" style="display: none;">
+        <input type="text" id="input-predicado" placeholder="o que? Como? onde?...">
+        <ul id="lista-predicados-sugeridos"></ul>
       </div>
+      <ul id="lista-verbos-sugeridos"></ul>
     </div>
   </div>
 
