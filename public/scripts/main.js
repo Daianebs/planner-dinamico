@@ -5,7 +5,7 @@ import InterfaceUsuarioModule from './InterfaceUsuarioModule.js';
 document.addEventListener('DOMContentLoaded', () => {
   console.log("DOM fully loaded and parsed");
 
-  carregarDados(); // Inicia o carregamento dos dados
+  carregarDados(); 
 
   // Espera pelo carregamento completo dos dados antes de continuar
   setTimeout(() => {
@@ -31,7 +31,7 @@ document.addEventListener('DOMContentLoaded', () => {
    interfaceUsuarioModule.exibirOpcoes(textoDigitado)
     });
 
-  }, 1000); // Espera 1 segundo antes de criar as instâncias, ajuste conforme necessário
+  }, 100); // Espera antes de criar as instâncias, ajuste conforme necessário
 
 });
  

@@ -13,7 +13,7 @@ export function carregarDados() {
     .then(data => {
       verbos = Object.keys(data.tarefas);
       predicados = data.tarefas;
-      console.log("Dados carregados com sucesso:", verbos, predicados);
+      //console.log("Dados carregados com sucesso:", verbos, predicados);
 
       // Carregar tarefas do localStorage, se existirem
       const storedTarefas = localStorage.getItem('tarefas');
@@ -73,7 +73,7 @@ export function exibirTarefasDia() {
 
     const botaoExcluir = document.createElement("span");
     botaoExcluir.textContent = "Excluir";
-    botaoExcluir.className = "acao";
+    botaoExcluir.className = "acao botao-excluir";
     botaoExcluir.addEventListener("click", () => excluirTarefa(index));
     botoesTarefa.appendChild(botaoExcluir);
 
