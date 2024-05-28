@@ -33,12 +33,7 @@ class InterfaceUsuarioModule {
 
   selecionarVerbo(verbo) {
     document.getElementById("input-acao").value = verbo;
-
-    if (this.tarefasModule && typeof this.tarefasModule.adicionarNovaAcao === 'function') {
-      this.sugestoesModule.exibirPredicadosSugeridos(verbo, this.tarefasModule.adicionarNovaAcao.bind(this.tarefasModule));
-    } else {
-      console.error('Função adicionarNovaAcao não está disponível em tarefasModule');
-    }
+    this.sugestoesModule.exibirPredicadosSugeridos(verbo, this.tarefasModule.adicionarNovaAcao.bind(this.tarefasModule));
 
     document.getElementById("lista-verbos-sugeridos").style.display = "none";
   }
